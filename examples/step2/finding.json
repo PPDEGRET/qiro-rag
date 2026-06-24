@@ -1,0 +1,8 @@
+{
+  "claimId": "claim-carbon-neutral-delivery",
+  "claimText": "Our delivery is carbon neutral.",
+  "consumerImpression": "The service has no net climate impact.",
+  "critique": "Absolute climate claim lacks clear basis, scope, and compensation disclosure.",
+  "ruleRefs": ["EmpCo climate-related environmental claims"],
+  "needsEvidenceCheck": true
+}
