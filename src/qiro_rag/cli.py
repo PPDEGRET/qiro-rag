@@ -17,7 +17,7 @@ from qiro_rag.ingest import ingest_path
 from qiro_rag.learning import make_review_decision, propose_playbook_patch, record_review_decision
 from qiro_rag.model_profiles import assess_args, get_profile, profile_names, recommend_profile
 from qiro_rag.retrieval import retrieve
-from qiro_rag.schemas import EmbeddingBackend, JudgeMode, RetrievalMode, StorageMode
+from qiro_rag.schemas import EmbeddingBackend, JudgeMode, RetrievalMode, StorageMode, WorkflowMode
 
 app = typer.Typer(
     help="Local-first evidence substantiation/RAG tools for Qiro Step 3.",
@@ -183,6 +183,12 @@ def assess(
     profile: Annotated[
         str | None, typer.Option(help=f"Model profile: {', '.join(profile_names())}.")
     ] = None,
+    workflow: Annotated[
+        WorkflowMode, typer.Option(help="Assessment workflow: direct or langgraph.")
+    ] = "direct",
+    trace_out: Annotated[
+        Path | None, typer.Option(help="Optional local JSON trace for workflow debugging.")
+    ] = None,
 ) -> None:
     """Assess one Step 2 finding against an evidence pack."""
 
@@ -191,9 +197,28 @@ def assess(
         judge = selected.judge  # type: ignore[assignment]
         judge_model = selected.model
     step2 = load_step2_finding(finding)
-    package = assess_finding(
-        step2, pack, retrieval_mode=mode, top_k=top_k, judge=judge, judge_model=judge_model
-    )
+    if workflow == "langgraph":
+        from qiro_rag.workflows.langgraph_assess import run_langgraph_assessment, write_trace
+
+        result = run_langgraph_assessment(
+            step2, pack, retrieval_mode=mode, top_k=top_k, judge=judge, judge_model=judge_model
+        )
+        package = result.package
+        if trace_out:
+            write_trace(result.trace, trace_out)
+    else:
+        package = assess_finding(
+            step2, pack, retrieval_mode=mode, top_k=top_k, judge=judge, judge_model=judge_model
+        )
+        if trace_out:
+            trace_out.parent.mkdir(parents=True, exist_ok=True)
+            trace_out.write_text(
+                json.dumps(
+                    [{"node": "direct_assess", "status": package.assessment.status}], indent=2
+                )
+                + "\n",
+                encoding="utf-8",
+            )
     write_assessment(package, out, include_frame=include_frame)
     typer.echo(f"Wrote {out}")
 

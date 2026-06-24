@@ -35,7 +35,8 @@ Working local Step 3 prototype:
 - review memory in `review_decisions.csv`;
 - optional playbook patch proposals from reviewer decisions;
 - connector staging for local folders and CSV manifests;
-- model profiles + onboarding recommender for heuristic, local Ollama, and OpenAI-compatible judges.
+- model profiles + onboarding recommender for heuristic, local Ollama, and OpenAI-compatible judges;
+- optional LangGraph workflow with typed intermediate nodes and local trace output.
 
 ```bash
 uv run qiro-rag init-pack examples/evidence-pack
@@ -46,6 +47,7 @@ uv run qiro-rag assess examples/step2/finding.json --pack ./evidence-pack --out 
 uv run qiro-rag models
 uv run qiro-rag onboard
 uv run qiro-rag assess examples/step2/finding.json --pack ./evidence-pack --out step3_evidence.json --profile ollama-private-small
+uv run --extra workflow qiro-rag assess examples/step2/finding.json --pack ./evidence-pack --out step3_evidence.json --workflow langgraph --trace-out graph_trace.json
 uv run qiro-rag learn --pack ./evidence-pack --propose playbook.patch.yaml
 uv run pytest
 ```
@@ -59,7 +61,7 @@ Qiro RAG is a **risk-review aid** for substantiation. It does not provide legal 
 - Local-first by default: no raw docs, embeddings, or telemetry leave the machine unless explicitly enabled.
 - Messy folders are allowed: Qiro tags documents; it should not require users to pre-sort them.
 - Docling is attempted when installed; lightweight local parsers cover `md`, `txt`, `pdf`, `docx`, `xlsx`, and `csv` by default; OCR is optional/local.
-- Framework orchestration can be added later, but Qiro schemas and audit trails stay in this repo.
+- Direct typed Qiro functions remain the default; optional LangGraph orchestration adds node-level traceability without changing output schemas.
 - RAG can retrieve semantically, but every cited support must include a source quote that exists in the parsed document.
 - Human review decisions are memory: `review_decisions.csv` first, optional approved playbook updates later.
 
@@ -71,5 +73,5 @@ Qiro RAG is a **risk-review aid** for substantiation. It does not provide legal 
 - [Schemas](docs/SCHEMAS.md)
 - [Privacy](docs/PRIVACY.md)
 - [Model profiles](docs/MODEL_PROFILES.md)
-- [Future LangChain/LangGraph prompt](docs/FUTURE_LANGCHAIN_PROMPT.md)
+- [LangChain/LangGraph workflow](docs/FUTURE_LANGCHAIN_PROMPT.md)
 - [Roadmap](docs/ROADMAP.md)

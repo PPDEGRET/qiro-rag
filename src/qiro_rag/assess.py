@@ -130,20 +130,7 @@ def assess_finding(
 
         assessment = judge_with_llm(frame, hits, client_from_mode(judge, model=judge_model))
         assessment = align_model_citations(frame, hits, assessment)
-    assessment = assessment.model_copy(
-        update={
-            "supporting_evidence": verify_citations(index, assessment.supporting_evidence),
-            "contradicting_evidence": verify_citations(index, assessment.contradicting_evidence),
-        }
-    )
-    # Quote-backed rule: unverified evidence cannot be cited as support.
-    assessment.supporting_evidence[:] = [
-        citation for citation in assessment.supporting_evidence if citation.verified
-    ]
-    assessment.contradicting_evidence[:] = [
-        citation for citation in assessment.contradicting_evidence if citation.verified
-    ]
-    assessment = assessment.model_copy(update={"status": _status_after_verification(assessment)})
+    assessment = finalize_verified_assessment(verify_assessment_quotes(index, assessment))
     return Step3ReviewPackage(issueFrame=frame, assessment=assessment, retrievalMode=retrieval_mode)
 
 
@@ -155,6 +142,30 @@ def write_assessment(package: Step3ReviewPackage, path: Path, include_frame: boo
         else package.assessment.model_dump(by_alias=True)
     )
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def verify_assessment_quotes(index: EvidenceIndex, assessment: Step3Assessment) -> Step3Assessment:
+    return assessment.model_copy(
+        update={
+            "supporting_evidence": verify_citations(index, assessment.supporting_evidence),
+            "contradicting_evidence": verify_citations(index, assessment.contradicting_evidence),
+        }
+    )
+
+
+def finalize_verified_assessment(assessment: Step3Assessment) -> Step3Assessment:
+    # Quote-backed rule: unverified evidence cannot be cited as support.
+    filtered = assessment.model_copy(
+        update={
+            "supporting_evidence": [
+                citation for citation in assessment.supporting_evidence if citation.verified
+            ],
+            "contradicting_evidence": [
+                citation for citation in assessment.contradicting_evidence if citation.verified
+            ],
+        }
+    )
+    return filtered.model_copy(update={"status": _status_after_verification(filtered)})
 
 
 def judge_evidence(frame: IssueFrame, hits: list[SearchHit]) -> Step3Assessment:

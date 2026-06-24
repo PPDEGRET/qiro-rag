@@ -2,7 +2,7 @@
 
 ## Design stance
 
-Keep v0.1 local, typed, and boring. Add framework orchestration later only when it provides real typed nodes or tracing.
+Keep v0.1 local, typed, and boring. Framework orchestration is optional and only exists where it provides real typed nodes and tracing.
 
 ```text
 Connectors     = explicit pull into local staging folders
@@ -13,6 +13,7 @@ SQLite/files   = local storage, chunks, tables, embeddings, audit trail
 Vector index   = persisted local embeddings in SQLite
 LLM judge      = heuristic by default, OpenAI-compatible/Ollama opt-in
 Qiro schemas   = source of truth
+LangGraph      = optional workflow wrapper with typed Step 3 nodes
 CSV/playbooks  = human-approved memory
 ```
 
@@ -28,6 +29,7 @@ Enterprise source
   -> optionally persist local embeddings
   -> Step 2 findings become issue frames
   -> hybrid retrieval finds candidate evidence
+  -> direct functions or optional LangGraph nodes run the same assessment steps
   -> heuristic or opt-in LLM assessor judges support/gaps/contradictions
   -> quote verifier removes ungrounded citations
   -> Step 3 JSON artifact feeds Step 4 report
@@ -61,6 +63,19 @@ Retrieval modes:
 - `hybrid`: combined keyword, semantic, and metadata filtering.
 
 Run `qiro-rag embed --pack <pack>` to persist hash embeddings. Use `--backend sentence-transformers` with `uv sync --extra local-embeddings` for stronger local semantic retrieval.
+
+## Workflow orchestration
+
+`qiro-rag assess` defaults to `--workflow direct`: the CLI calls typed Qiro functions with no LangChain dependency.
+
+Install the optional graph dependencies to use LangGraph:
+
+```bash
+uv sync --extra workflow
+uv run --extra workflow qiro-rag assess finding.json --pack evidence-pack --out step3.json --workflow langgraph --trace-out graph_trace.json
+```
+
+The LangGraph path is a linear graph of typed nodes: issue framing, query generation, retrieval, judging, model-citation alignment, quote verification, and status finalization. It emits the same public Step 3 JSON shape as the direct path; framework objects never appear in output artifacts.
 
 ## LLM judge
 

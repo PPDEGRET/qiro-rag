@@ -8,7 +8,7 @@ Shortest path:
 2. Build evidence-pack ingestion for `md`, `txt`, `pdf`, `docx`, `xlsx`, `csv` with Docling.
 3. Store parsed chunks, tables, metadata, hashes, and citations locally.
 4. Add hybrid retrieval: keyword + optional local semantic embeddings + metadata filters.
-5. Keep the assessment workflow in typed Qiro functions; add framework orchestration later only if it adds real nodes/tracing.
+5. Keep the assessment workflow in typed Qiro functions; optional LangGraph orchestration adds real nodes/tracing without becoming the default.
 6. Judge each Step 2 issue as claim X + critique/law issue Y + possible evidence Z.
 7. Verify cited quotes exist in source text.
 8. Emit `step3_evidence.json` for Step 4 reporting.

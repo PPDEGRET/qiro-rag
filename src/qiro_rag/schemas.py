@@ -18,6 +18,7 @@ EvidenceStatus = Literal[
 
 EvidenceRelation = Literal["supports", "limits", "contradicts", "context", "irrelevant"]
 RetrievalMode = Literal["keyword", "semantic", "hybrid"]
+WorkflowMode = Literal["direct", "langgraph"]
 StorageMode = Literal["reference", "managed-copy"]
 JudgeMode = Literal["heuristic", "openai", "ollama"]
 EmbeddingBackend = Literal["hash", "sentence-transformers"]
