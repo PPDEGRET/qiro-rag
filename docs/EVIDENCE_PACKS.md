@@ -69,8 +69,6 @@ Use this as auditable memory before adding any self-improvement system.
 
 Recommended default: `managed-copy`, because it makes later audits easier.
 
-## Ingestion report
-
 ## Connector staging
 
 Use `qiro-rag pull` to stage enterprise sources locally before ingesting:

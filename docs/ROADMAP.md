@@ -32,7 +32,7 @@
 - [x] heuristic judge;
 - [x] opt-in OpenAI-compatible judge;
 - [x] opt-in local Ollama judge;
-- [ ] optional orchestration/tracing wrapper when real typed nodes are needed;
+- [x] optional orchestration/tracing wrapper when real typed nodes are needed;
 - [x] Step 3 JSON writer.
 
 ## Milestone 4: semantic retrieval

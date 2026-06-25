@@ -1,6 +1,6 @@
-# LangChain/LangGraph workflow
+# LangGraph workflow
 
-Status: the optional LangGraph assessment workflow is implemented. The direct Qiro pipeline remains the default and dependency-light path.
+The optional LangGraph assessment workflow is implemented. The direct Qiro pipeline remains the default and dependency-light path.
 
 Use it when node-level tracing is useful:
 
