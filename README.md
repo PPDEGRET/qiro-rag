@@ -118,7 +118,6 @@ Only retrieved candidate passages are sent to an opt-in LLM judge, and returned 
 - [Schemas](docs/SCHEMAS.md)
 - [Privacy model](docs/PRIVACY.md)
 - [Model profiles](docs/MODEL_PROFILES.md)
-- [LangGraph workflow](docs/LANGGRAPH_WORKFLOW.md)
 - [Roadmap](docs/ROADMAP.md)
 
 ## Repository map
