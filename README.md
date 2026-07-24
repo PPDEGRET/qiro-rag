@@ -140,10 +140,14 @@ uv run --extra workflow pytest
 uv build
 ```
 
-## Related work
+## Related repositories
 
-- Step 1/Step 2 analyzer: <https://github.com/PPDEGRET/EMPCOAnalyzer>
-- This repository: Step 3 evidence retrieval/substantiation.
+- **Qiro Analyzer** — Steps 1, 1.5 and 2: claim extraction, grouping and risk review  
+  <https://github.com/PPDEGRET/EMPCOAnalyzer>
+- **Qiro RAG** — Step 3: evidence retrieval and quote-backed substantiation review  
+  <https://github.com/PPDEGRET/qiro-rag>
+- **Qiro Launch Gate** — Step 4: reviewer memo, checklist and visual artifacts  
+  <https://github.com/PPDEGRET/qiro-launch-gate-demo>
 
 ## License
 
